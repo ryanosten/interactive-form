@@ -1,5 +1,33 @@
 $(document).ready(function() {
+	
+	$('.activities label').last().after('<h2 class="total-price"></h2>');
+	$('.total-price').hide();
 
+	function displayPrice(totalPrice){
+		$('.total-price').show()
+		$('.total-price').html('Price: ' + totalPrice)
+	}	
+
+	function checkConflicts(activity){
+			
+			if(activity.attr('name') == "js-frameworks"){
+			$('input[name=express]').parent().css('color', 'grey');
+			$('input[name=express]').attr('disabled', 'disabled');
+			
+		} else if(activity.attr('name') == "express"){
+			$('input[name=js-frameworks]').parent().css('color', 'grey');
+			$('input[name=js-frameworks]').attr('disabled', 'disabled');
+		
+		} else if(activity.attr('name') == "js-libs"){
+			$('input[name=node]').parent().css('color', 'grey');
+			$('input[name=node]').attr('disabled', 'disabled');
+
+		} else if(activity.attr('name') == "node"){
+			$('input[name=js-libs]').parent().css('color', 'grey');
+			$('input[name=js-libs]').attr('disabled', 'disabled');
+		}
+	}
+	
 	//focus on #name input on page load
 	$('#name').addClass('focus');
 
@@ -10,7 +38,7 @@ $(document).ready(function() {
 		if ($('option[value=other]').is(':selected')){
 			
 			//create new text input for job role if job is 'other'
-			var textInput = $('<input type="text" id="job_role" name="job_role" placeholder="Your job role">')
+			var textInput = $('<input type="text" id="other-title" name="other-title" placeholder="Your Title">')
 			
 			//append new textInput
 			$('#title').after(textInput);
@@ -18,9 +46,62 @@ $(document).ready(function() {
 		} else {
 			
 			//if option of 'other not selected', hide the input
-			$('input[name="job_role"]').hide();
+			$('#other-title').hide();
 		}
 	
 	});
 
+	$('#design').on("change", function(){
+		
+		$('#color').children().show();
+		
+		if ($('option[value="js puns"]').is(':selected')){
+
+			$('#color').children().slice(3).hide();
+			$('option[value=tomato]').removeAttr("selected");
+			$('#color').children().first().attr("selected", "selected");
+		
+		} else if ($('option[value="heart js"]').is(':selected')) {
+
+			$('#color').children().slice(0, 3).hide();
+			$('#color').children().first().removeAttr("selected");
+			$('option[value=tomato]').attr("selected", "selected");
+
+
+		} else {
+			$('#color').children().removeAttr("selected")
+		}
+
+	});
+	
+	$('.activities input[type=checkbox]').on('click', function(){
+		
+		var totalPrice = 0;
+
+		$('.activities label').css('color', 'black');
+		$('.activities input[type=checkbox]').removeAttr('disabled');
+
+		$('.activities input[type=checkbox]').each(function(){
+	
+			if($(this).prop('checked')){
+
+				checkConflicts($(this));
+			};
+
+			if($(this).prop('checked') && $(this).attr('name') == 'all'){
+				totalPrice += 200;
+			
+			} else if ($(this).prop('checked') && $(this).attr('name') !== 'all'){
+				totalPrice += 100;
+			}
+		});
+
+		if(totalPrice !== 0){
+			displayPrice(totalPrice);
+		} else {
+			$('.total-price').hide();
+		}
+	});
 });
+			
+
