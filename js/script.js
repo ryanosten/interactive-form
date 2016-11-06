@@ -4,8 +4,8 @@ $(document).ready(function() {
 	$('.total-price').hide();
 
 	function displayPrice(totalPrice){
-		$('.total-price').show()
-		$('.total-price').html('Price: ' + totalPrice)
+		$('.total-price').show();
+		$('.total-price').html('Price: ' + totalPrice);
 	}	
 
 	function checkConflicts(activity){
@@ -38,7 +38,7 @@ $(document).ready(function() {
 		if ($('option[value=other]').is(':selected')){
 			
 			//create new text input for job role if job is 'other'
-			var textInput = $('<input type="text" id="other-title" name="other-title" placeholder="Your Title">')
+			var textInput = $('<input type="text" id="other-title" name="other-title" placeholder="Your Title">');
 			
 			//append new textInput
 			$('#title').after(textInput);
@@ -69,7 +69,7 @@ $(document).ready(function() {
 
 
 		} else {
-			$('#color').children().removeAttr("selected")
+			$('#color').children().removeAttr("selected");
 		}
 
 	});
@@ -86,7 +86,7 @@ $(document).ready(function() {
 			if($(this).prop('checked')){
 
 				checkConflicts($(this));
-			};
+			}
 
 			if($(this).prop('checked') && $(this).attr('name') == 'all'){
 				totalPrice += 200;
@@ -101,6 +101,100 @@ $(document).ready(function() {
 		} else {
 			$('.total-price').hide();
 		}
+	});
+
+	//PAYMENT OPTIONS
+	//default payment method to credit card
+	$('#payment option[value="credit card"]').attr('selected', 'selected');
+	$('.credit-card').siblings('div').hide();
+
+	$('#payment').on('change', function(){
+		if($('#payment option[value="credit card"]').is(':selected')){
+			$('.credit-card').show();
+			$('.credit-card').siblings('div').hide();
+		
+		} else if($('#payment option[value="paypal"]').is(':selected')){
+			$('.credit-card').next().show();
+			$('.credit-card').next().siblings('div').hide();
+		} else {
+			$('.credit-card').siblings().last().show();
+			$('.credit-card').siblings().last().siblings('div').hide();
+		}
+
+		//check 'select payment method', make sure all is hidden. 
+	
+	});
+
+	//VALIDATION AND ERROR MESSAGES
+
+	var nameEmpty = $('<p>Name field cannot be empty. Please enter your name</p>');
+	nameEmpty.css('color', 'red');
+	$('label[for=name]').before(nameEmpty);
+	nameEmpty.hide();
+
+	var emailEmpty = $('<p>Email field cannot be empty. Please enter your email</p>');
+	emailEmpty.css('color', 'red');
+	$('label[for=mail]').before(emailEmpty);
+	emailEmpty.hide();
+
+	var shirtEmpty = $('<p>You forget to pick a t-shirt.</p>');
+	shirtEmpty.css('color', 'red');
+	$('label[for=design]').before(shirtEmpty);
+	shirtEmpty.hide();
+
+	var activityEmpty = $('<p>You forget to pick an activity.</p>')
+	activityEmpty.css('color', 'red');
+	$('.activities').after(activityEmpty);
+	activityEmpty.hide();
+
+	var paymentEmpty = $('<p>You must select a payment method.</p>')
+	paymentEmpty.css('color', 'red');
+	$('label[for=payment]').before(paymentEmpty);
+	paymentEmpty.hide();
+
+	$('button[type=submit]').on('click', function(){
+
+		nameEmpty.hide();
+		emailEmpty.hide();
+		shirtEmpty.hide();
+		activityEmpty.hide();
+		paymentEmpty.hide();
+
+		if(!$('#name').val() || !$('#mail').val() || !$('#design[value="js-puns"]').is(':selected') && !$('#design[value="heart js"]').is(':selected')){
+
+			if(!$('#name').val()){
+				nameEmpty.show();
+			}
+
+			if(!$('#mail').val()){
+				emailEmpty.show();
+			}
+
+			if(!$('#design[value="js-puns"]').is(':selected') && !$('#design[value="heart js"]').is(':selected')){
+				shirtEmpty.show();
+			}
+
+			var activityCounter = 0;
+			
+			$('.activities input[type=checkbox]').each(function(){
+				if($(this).prop('checked')){
+					activityCounter ++;
+				}
+			});
+			
+			if(activityCounter === 0){
+				activityEmpty.show();
+			}
+
+			//check payment method
+
+			if($('#payment option[value=select_method').is(':selected')){
+				paymentEmpty.show();
+				console.log('payment emp')
+			};
+
+			return false
+		};
 	});
 });
 			
