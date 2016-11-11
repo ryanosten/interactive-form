@@ -35,6 +35,14 @@ $(document).ready(function() {
     		return false 
 	}  
 
+	//validate credit card
+
+	function validCC(){
+		$('#cc-num').validateCreditCard(function(result){
+			result.valid;
+		});
+	}
+
 	//focus on #name input on page load
 	$('#name').focus();
 
@@ -63,6 +71,7 @@ $(document).ready(function() {
 	
 	$('#color').children().first().before('<option value="select-shirt"> < --- Please select a T-shirt theme</option>')
 	$('#color').val('select-shirt');
+	$('#color').children().slice(1).hide();
 
 	$('#design').on("change", function(){
 		
@@ -70,25 +79,21 @@ $(document).ready(function() {
 		
 		if($('#design').children().first().is(':selected')){
 			$('#color').val('select-shirt');
+			$('#color').children().slice(1).hide();
 		
 		} else if ($('#design option[value="js puns"]').is(':selected')){
 		
-			$('option[value=select-shirt').hide()
+			$('option[value=select-shirt]').hide()
 			$('#color').val('cornflowerblue');
 			$('#color').children().slice(4).hide();
 
 
-		} else if ($('option[value="heart js"]').is(':selected')) {
+		} else {
 
-			$('option[value=select-shirt').hide()
+			$('option[value=select-shirt]').hide()
 			$('#color').val('tomato');
 			$('#color').children().slice(0, 4).hide();
-
-
-
-		} else {
-			$('#color').children().removeAttr("selected");
-		}
+		} 
 
 	});
 	
@@ -123,27 +128,27 @@ $(document).ready(function() {
 
 	//PAYMENT OPTIONS
 	//default payment method to credit card
-	$('#payment option[value="credit card"]').attr('selected', 'selected');
+	//$('#payment option[value="credit card"]').attr('selected', 'selected');
 	$('.credit-card').siblings('div').hide();
 
 	$('#payment').on('change', function(){
-		if($('#payment option[value="credit card"]').is(':selected')){
-			$('.credit-card').show();
-			$('.credit-card').siblings('div').hide();
 		
-		} else if($('#payment option[value="paypal"]').is(':selected')){
+		if($('#payment option[value="paypal"]').is(':selected')){
 			$('.credit-card').next().show();
 			$('.credit-card').next().siblings('div').hide();
-		} else {
+		
+		} else if ($('#payment option[value="bitcoin"]').is(':selected')){
 			$('.credit-card').siblings().last().show();
-			$('.credit-card').siblings().last().siblings('div').hide();
+			$('.credit-card').hide();
+			$('.credit-card').next().hide();
+		
+		} else {
+			$('.credit-card').show();
+			$('.credit-card').siblings('div').hide();
 		}
-
-		//check 'select payment method', make sure all is hidden. 
-	
 	});
 
-	//VALIDATION AND ERROR MESSAGES
+//VALIDATION AND ERROR MESSAGES
 
 	var nameEmpty = $('<p>Name field cannot be empty. Please enter your name</p>');
 	nameEmpty.css('color', 'red');
@@ -157,11 +162,12 @@ $(document).ready(function() {
 
 	var shirtEmpty = $('<p>You forget to pick a t-shirt.</p>');
 	shirtEmpty.css('color', 'red');
-	$('label[for=design]').before(shirtEmpty);
+	$('.shirt legend').after(shirtEmpty);
 	shirtEmpty.hide();
 
 	var activityEmpty = $('<p>You forget to pick an activity.</p>')
 	activityEmpty.css('color', 'red');
+	shirtEmpty.css('margin-top', '-20px');
 	$('.activities').after(activityEmpty);
 	activityEmpty.hide();
 
@@ -170,6 +176,21 @@ $(document).ready(function() {
 	$('label[for=payment]').before(paymentEmpty);
 	paymentEmpty.hide();
 
+	//limit cvv input to 4 chars (reqs say 3 chars but )
+	$('#cvv').attr('type', 'text');
+	$('#cvv').attr('maxlength', '4');
+	$('#cvv').attr('pattern', '([0-9]{4})');
+	
+	$('#cvv').keyup(function(){
+		
+		$('#cvv').val(this.value.match(/[0-9]*/))
+		
+	});
+
+
+	//limit zip[ to value chars
+	$('#zip').attr('maxlength', '5');
+
 	$('button[type=submit]').on('click', function(){
 
 		//create variable to store e-mail input for validation
@@ -177,7 +198,7 @@ $(document).ready(function() {
 
 		//check if any of the input validators throw error. If yes, check which validation fails and then return false so that form does not submit. Reason we need to wrap all conditions in this larger if statement is because if we were to do otherwise and return false in each condition, then the following condition expressions wouldn't run after return false. 
 		if(!$('#name').val() || validateEmail(mailAdd) == false || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) 
-			|| ($('#payment option[value="credit card"]').is(':selected') && (!$('#cc-num').val() || !$('#zip').val() || $('#cvv').val().length !== 3))){
+			|| ($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value="select_method"]').is(':selected') && (validCC() == false || !$('#cc-num').val() || !$('#zip').val() || $('#cvv').val().length !== 3))){
 
 			if(!$('#name').val()){
 				nameEmpty.show();
@@ -187,7 +208,6 @@ $(document).ready(function() {
 
 			if(validateEmail(mailAdd) == false){
 				emailEmpty.show();
-				console.log('ran')
 			} else {
 				emailEmpty.hide();
 			}
@@ -213,31 +233,41 @@ $(document).ready(function() {
 			}
 
 			//check payment method
-
+			/*
 			if($('#payment option[value=select_method]').is(':selected')){
 				paymentEmpty.show();
 			} else {
 				paymentEmpty.hide();
 			}
+			*/
 
 			//check if card # empty
-			if($('#payment option[value="credit card"]').is(':selected') && !$('#cc-num').val()){
+			if(($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && !$('#cc-num').val()){
 				$('label[for="cc-num"').css('color', 'red');
 			} else {
 				$('label[for="cc-num"').css('color', 'black')
 			}
 
-			//check if zp empty
-			if($('#payment option[value="credit card"]').is(':selected') && !$('#zip').val()){
+			//check if zip empty
+			if(($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && !$('#zip').val()){
 				$('label[for=zip').css('color', 'red');
 			} else {
 				$('label[for=zip').css('color', 'black');
 			}
 
-			if($('#payment option[value="credit card"]').is(':selected') && $('#cvv').val().length !== 3 ){
+			if(($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && $('#cvv').val().length !== 3){
 				$('label[for=cvv]').css('color', 'red');
 			} else {
 				$('label[for=cvv]').css('color', 'black');
+			}
+
+			if (($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && (validCC() == false)){
+				console.log('this shit run');
+				/*		
+				var validCC = ('<p> please enter a valid credit card number<p>');
+				$('#payment').after(validCC);
+				$(validCC).css('color', 'red');
+				*/
 			}
 
 			return false
