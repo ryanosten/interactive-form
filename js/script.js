@@ -224,16 +224,16 @@ $(document).ready(function() {
 
 			//check if card # empty
 			if(($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && !$('#cc-num').val()){
-				$('label[for="cc-num"').css('color', 'red');
+				$('label[for=cc-num]').css('color', 'red');
 			} else {
-				$('label[for="cc-num"').css('color', 'black')
+				$('label[for=cc-num]').css('color', 'black')
 			}
 
 			//check if zip empty
 			if(($('#payment option[value="credit card"]').is(':selected') || $('#payment option[value=select_method]').is(':selected')) && ($('#zip').val() < 5)){
-				$('label[for=zip').css('color', 'red');
+				$('label[for=zip]').css('color', 'red');
 			} else {
-				$('label[for=zip').css('color', 'black');
+				$('label[for=zip]').css('color', 'black');
 			}
 
 			var cvv = $('#cvv').val();
