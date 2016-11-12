@@ -75,10 +75,10 @@ $(document).ready(function() {
 
 	$('#design').on("change", function(){
 		
-		$('label[for=color], #color, #color option').show();
+		$('label[for=color], #color, #color option, #color-styled').show();
 		
 		if($('#design').children().first().is(':selected')){
-			$('label[for=color], #color').hide();
+			$('label[for=color], #color, #color-styled').hide();
 		
 		} else if ($('#design option[value="js puns"]').is(':selected')){
 			$('#color').val('cornflowerblue');
@@ -124,14 +124,15 @@ $(document).ready(function() {
 	//PAYMENT OPTIONS
 	//default payment method to credit card
 	//$('#payment option[value="credit card"]').attr('selected', 'selected');
-	$('.credit-card').siblings('div').hide();
+	$('.credit-card').nextAll('div').hide();
 	$('#payment').val('credit card');
 
 	$('#payment').on('change', function(){
 		
 		if($('#payment option[value="paypal"]').is(':selected')){
 			$('.credit-card').next().show();
-			$('.credit-card').next().siblings('div').hide();
+			$('.credit-card').hide();
+			$('.credit-card').siblings().last().hide();
 		
 		} else if ($('#payment option[value="bitcoin"]').is(':selected')){
 			$('.credit-card').siblings().last().show();
@@ -140,9 +141,10 @@ $(document).ready(function() {
 		
 		} else if ($('#payment option[value="credit card"]').is(':selected')){
 			$('.credit-card').show();
-			$('.credit-card').siblings('div').hide();
+			$('.credit-card').nextAll('div').hide();
 		} else {
-			$('#payment').nextAll().hide();
+			$('#credit-card').hide();
+			$('#credit-card').nextAll().hide();
 		}
 	});
 

@@ -76,6 +76,10 @@ label {
 	margin-bottom: .5em;
 }
 
+label[for="exp-year"]{
+	margin-top: 20px;
+}
+
 input,
 select {
 	margin-bottom: 1.125em;	
@@ -112,6 +116,73 @@ button {
 button:hover {
 	background: #184c62;
 }
+
+#other-title {
+	margin-top: 35px;
+}
+
+.styled-select-large select {
+	background: transparent;
+   	width: 308px;
+   	padding: 5px;
+   	font-size: 16px;
+   	line-height: 1;
+   	border: 0;
+   	border-radius: 0;
+   	height: 34px;
+   	-webkit-appearance: none;
+}
+
+.styled-select-large {
+   width: 308px;
+   height: 34px;
+   overflow: hidden;
+   background: url('../images/arrow.png') no-repeat right #c1deeb;
+   border: none;
+   background-size: 30px 15px;
+   }
+
+.styled-select-small select {
+	background: transparent;
+   	width: 55px;
+   	padding: 5px;
+   	font-size: 16px;
+   	line-height: 1;
+   	border: 0;
+   	border-radius: 0;
+   	height: 34px;
+   	-webkit-appearance: none;
+}
+
+.styled-select-small {
+   width: 55px;
+   height: 34px;
+   overflow: hidden;
+   background: url('../images/arrow.png') no-repeat right #c1deeb;
+   border: none;
+   background-size: 30px 15px;
+   }
+
+ .styled-select-medium select {
+	background: transparent;
+   	width: 170px;
+   	padding: 5px;
+   	font-size: 16px;
+   	line-height: 1;
+   	border: 0;
+   	border-radius: 0;
+   	height: 34px;
+   	-webkit-appearance: none;
+}
+
+.styled-select-medium {
+   width: 170px;
+   height: 34px;
+   overflow: hidden;
+   background: url('../images/arrow.png') no-repeat right #c1deeb;
+   border: none;
+   background-size: 30px 15px;
+   }
 
 /* ================================= 
   Page Styles
