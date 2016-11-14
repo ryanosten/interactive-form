@@ -131,6 +131,7 @@ button:hover {
    	border-radius: 0;
    	height: 34px;
    	-webkit-appearance: none;
+   	-moz-appearance: none;
 }
 
 .styled-select-large {
@@ -152,6 +153,7 @@ button:hover {
    	border-radius: 0;
    	height: 34px;
    	-webkit-appearance: none;
+   	-moz-appearance: none;
 }
 
 .styled-select-small {
@@ -173,6 +175,7 @@ button:hover {
    	border-radius: 0;
    	height: 34px;
    	-webkit-appearance: none;
+   	-moz-appearance: none;
 }
 
 .styled-select-medium {
