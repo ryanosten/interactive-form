@@ -36,15 +36,15 @@ $(document).ready(function() {
 	//reg expression function to validate email
 	function validateEmail(mail){  
  		if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
-    		return true 
+    		return true; 
   		}  
-    		return false 
+    		return false;
 	}
 
 	//function that allows only numbers in inputs on which it is called. 
 	function numbersOnly(e){
 		//Only allow numbers
-		if(e.which != 8 && e.which != 0 && (e.which <48 || e.which > 57)){
+		if(e.which !== 8 && e.which !== 0 && (e.which <48 || e.which > 57)){
 			return false;
 		}
 	}  
@@ -96,7 +96,7 @@ $(document).ready(function() {
 
 		//if I <3 js selected, then hide all non-I<3js color and show the I <3 js colors
 		} else {
-			$('option[value=select-shirt]').hide()
+			$('option[value=select-shirt]').hide();
 			$('#color').val('tomato');
 			$('#color').children().slice(0, 4).hide();
 		} 
@@ -212,14 +212,14 @@ $(document).ready(function() {
 	shirtEmpty.hide();
 
 	//create element, structure and styles to apply if activity is not selected
-	var activityEmpty = $('<p>You forget to pick an activity.</p>')
+	var activityEmpty = $('<p>You forget to pick an activity.</p>');
 	activityEmpty.css('color', 'red');
 	shirtEmpty.css('margin-top', '-20px');
 	$('.activities').after(activityEmpty);
 	activityEmpty.hide();
 
 	//create element, structure and logic to apply if activity is not selected
-	var paymentEmpty = $('<p>You must select a payment method.</p>')
+	var paymentEmpty = $('<p>You must select a payment method.</p>');
 	paymentEmpty.css('color', 'red');
 	$('label[for=payment]').before(paymentEmpty);
 	paymentEmpty.hide();
@@ -237,14 +237,13 @@ $(document).ready(function() {
 	$('button[type=submit]').on('click', function(){
 
 		//store object returned by validateCreditCard(), which is function from cardValidator.js jQuery plug-in. Validates that credit card number is valid
-		var ccResult = $('#cc-num').validateCreditCard()
+		var ccResult = $('#cc-num').validateCreditCard();
 		
 		//create variable to store e-mail input for validation
 		var mailAdd = $('#mail').val();
 
 		//check if any of the input validators are invalid. If yes, then check which validation fails and show the invalid indicator, and return false so that form does not submit.  
-		if(!$('#name').val() || validateEmail(mailAdd) == false || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) 
-			|| ($('#payment option[value="credit card"]').is(':selected') && (!ccResult.valid || ($('#zip').val() < 5) || $('#cvv').val().length < 3))){
+		if(!$('#name').val() || validateEmail(mailAdd) === false || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) || ($('#payment option[value="credit card"]').is(':selected') && (!ccResult.valid || ($('#zip').val() < 5) || $('#cvv').val().length < 3))){
 
 			//check if name imput value is empty, if empty show the invalid indicator nameEmpty
 			if(!$('#name').val()){
@@ -254,7 +253,7 @@ $(document).ready(function() {
 			}
 
 			//check if email is invalid format, if invalid show the invalid indicator emailEmpty
-			if(validateEmail(mailAdd) == false){
+			if(validateEmail(mailAdd) === false){
 				emailEmpty.show();
 			} else {
 				emailEmpty.hide();
@@ -297,9 +296,7 @@ $(document).ready(function() {
 			} else {
 				$('label[for=zip]').css('color', 'black');
 			}
-
-			//store value of cvv
-			var cvv = $('#cvv').val();
+			
 			//check if cvv value length is less than 3. If cvv lenght less than 3, change cvv color to red. 
 			if($('#payment option[value="credit card"]').is(':selected') && ($('#cvv').val().length < 3)){
 				$('label[for=cvv]').css('color', 'red');
@@ -307,8 +304,8 @@ $(document).ready(function() {
 				$('label[for=cvv]').css('color', 'black');
 			}	
 		
-			return false
-		};
+			return false;
+		}
 	});
 });
 			
