@@ -49,6 +49,28 @@ $(document).ready(function() {
 		}
 	}  
 
+	//function that checks for empty inputs and input errors, displays error message
+	function checkError(condition, error){
+		if(condition){
+			error.show()
+		} else {
+			error.hide()
+		}
+	}
+
+	//function that checks for errors in credit card inputs
+	function checkCC(condition, value){
+		
+		if(condition){
+			
+			$('label[for=' + value + ']').css('color', 'red');		
+		
+		} else {
+			
+			$('label[for=' + value + ']').css('color', 'black');
+		}
+	}
+
 	//-------------BASIC INFO---------------//
 
 	//focus on #name input on page load
@@ -243,28 +265,20 @@ $(document).ready(function() {
 		var mailAdd = $('#mail').val();
 
 		//check if any of the input validators are invalid. If yes, then check which validation fails and show the invalid indicator, and return false so that form does not submit.  
-		if(!$('#name').val() || validateEmail(mailAdd) === false || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) || ($('#payment option[value="credit card"]').is(':selected') && (!ccResult.valid || ($('#zip').val() < 5) || $('#cvv').val().length < 3))){
+		if(!$('#name').val() || !validateEmail(mailAdd) || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) 
+			|| ($('#payment option[value="credit card"]').is(':selected') && (!ccResult.valid || ($('#zip').val() < 5) || $('#cvv').val().length < 3))){
 
 			//check if name imput value is empty, if empty show the invalid indicator nameEmpty
-			if(!$('#name').val()){
-				nameEmpty.show();
-			} else {
-				nameEmpty.hide();
-			}
+			
+			checkError(!$('#name').val(), nameEmpty);
 
 			//check if email is invalid format, if invalid show the invalid indicator emailEmpty
-			if(validateEmail(mailAdd) === false){
-				emailEmpty.show();
-			} else {
-				emailEmpty.hide();
-			}
+			
+			checkError(!validateEmail(mailAdd), emailEmpty);
 
 			//check t-shirt design not selected, if not selected show the shirtEmpty error indicator
-			if(!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')){
-				shirtEmpty.show();
-			} else {
-				shirtEmpty.hide();
-			}
+			
+			checkError(!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected'), shirtEmpty)
 
 			//initialize an activity counter to check number of activities selected
 			var activityCounter = 0;
@@ -277,36 +291,21 @@ $(document).ready(function() {
 			});
 			
 			//check value of activity counter, if activity counter is equal to 0, then show activityEmpty error message
-			if(activityCounter === 0){
-				activityEmpty.show();
-			} else {
-				activityEmpty.hide();
-			}
+			
+			checkError(activityCounter === 0, activityEmpty);
 
 			//check if card valid. If credit card is selected and ccResult is not valid (ccResult.valid == false), then change color of cc-num label to red, 
-			if($('#payment option[value="credit card"]').is(':selected') && !ccResult.valid){
-				$('label[for=cc-num]').css('color', 'red');
-			} else {
-				$('label[for=cc-num]').css('color', 'black');
-			}
+			
+			checkCC($('#payment option[value="credit card"]').is(':selected') && !ccResult.valid, 'cc-num');
 
 			//check if zip number less than 5. If credit card selected and zip is less than 5, change color of zip label to red.
-			if($('#payment option[value="credit card"]').is(':selected') && ($('#zip').val() < 5)){
-				$('label[for=zip]').css('color', 'red');
-			} else {
-				$('label[for=zip]').css('color', 'black');
-			}
-			
+			checkCC($('#payment option[value="credit card"]').is(':selected') && $('#zip').val().length < 5, 'zip');
+
 			//check if cvv value length is less than 3. If cvv lenght less than 3, change cvv color to red. 
-			if($('#payment option[value="credit card"]').is(':selected') && ($('#cvv').val().length < 3)){
-				$('label[for=cvv]').css('color', 'red');
-			} else {
-				$('label[for=cvv]').css('color', 'black');
-			}	
-		
+			checkCC($('#payment option[value="credit card"]').is(':selected') && $('#cvv').val().length < 3, 'cvv');
+
 			return false;
 		}
 	});
 });
-			
 
