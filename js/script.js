@@ -1,311 +1,198 @@
 $(document).ready(function() {
 	
-	//---------------FUNCTIONS-------------//
+    deptArray = [];
 
-	//function to sum the price of selected activities
-	function displayPrice(totalPrice){
-		$('.total-price').show();
-		$('.total-price').html('Price: ' + totalPrice);
-	}	
+    //check if department input empty
+    function checkEmpty(){
+        
+        var lastDeptInput = $(".dept-container").last();
 
-	//function to check the conflict times of activities
-	function checkConflicts(activity){
-			
-			//if activity is js-frameworks, then change color of express to grey and add attribute 'disabled' to express checkbox
-			if(activity.attr('name') == "js-frameworks"){
-			$('input[name=express]').parent().css('color', 'grey');
-			$('input[name=express]').attr('disabled', 'disabled');
-			
-			//if activity is express, then change color of js-frameworks to grey and add attribute 'disabled' to js-frameworks checkbox
-		} else if(activity.attr('name') == "express"){
-			$('input[name=js-frameworks]').parent().css('color', 'grey');
-			$('input[name=js-frameworks]').attr('disabled', 'disabled');
-		
-			//if activity is js-libs, then change color of node to grey and add attribute of disabled to node checkbox
-		} else if(activity.attr('name') == "js-libs"){
-			$('input[name=node]').parent().css('color', 'grey');
-			$('input[name=node]').attr('disabled', 'disabled');
+        if(!lastDeptInput.find('input').val()){
+            
+            lastDeptInput.append('<p class="dept-empty-error">Please enter a department name before adding a new department</p>');
+            
+            return true;
 
-			//if activity is node, then change color of js-libs to grey and add attribute of disabled to js-libs checkbox
-		} else if(activity.attr('name') == "node"){
-			$('input[name=js-libs]').parent().css('color', 'grey');
-			$('input[name=js-libs]').attr('disabled', 'disabled');
-		}
-	}
+        }
+    }
 
-	//reg expression function to validate email
-	function validateEmail(mail){  
- 		if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){  
-    		return true; 
-  		}  
+	//click handler to append newDept input and label to DOM. 
+    $('.new-dept-btn').on('click', function(){
+        
+        $('.dept-empty-error').remove();
+        $('.dept-dupe-error').remove();
+
+        if(checkEmpty()) {
+            
+            return false;
+        
+        // check if department already exists in deptArray
+        } else if ($.inArray($("input:focus").val(), deptArray) != -1) {
+            $(this).prev().append('<p class="dept-dupe-error">You already have a department with this name.<p>');
+            return false;
+
+        } else {
+        
+        var newDept = $('<div class="dept-container"></div>').html($('#new-dept').html());
+        
+        $('.dept-section').append(newDept);
+
+        newDept.find('input').focus();
+
+    	return false;
+        
+        }
+    	
+    	});
+
+    //check for empty dept one enter keyup
+    $('input').on('keyup', function(e){
+        if (e.keyCode == 13){
+            
+            $('.dept-empty-error').remove();
+            $('.dept-dupe-error').remove();
+            checkEmpty();
+
+            return false;
+        }
+    });
+
+    //click handler to remove dept if 'x' clicked
+    $(document).on('click', '.close-dept-button', function(){
+    	$(this).closest('.dept-container').remove();
+
+        var deptValue = $(this).prev().val();
+
+        var indexDeptValue = deptArray.indexOf(deptValue);
+ 
+        if (indexDeptValue != -1){
+            deptArray.splice(indexDeptValue, 1);
+        }
+
+        $('input[type="checkbox"]').each(function(){
+            
+            if(deptValue == $(this).attr('id')){
+                $(this).parent().remove();
+            }
+        });
+
+        console.log(deptArray);
+
+    	return false;
+    });
+
+    
+    //store value on focus and value on focusout of dept inputs
+    var originalValue;
+    var newValue;
+
+    $(document).on('focus', '.dept-name', function(){
+        originalValue = $(this).val();
+
+    });
+    
+
+    //push new departments to deptArray
+    $(document).on('focusout', '.dept-name', function(){
+        
+        newValue = $(this).val();
+        
+        if(originalValue !== newValue && deptArray.indexOf(originalValue) !== -1){
+
+            console.log(deptArray.indexOf(newValue));
+            console.log($('#' + originalValue));
+            
+            $('[id=' + originalValue + ']').each(function(){
+               $(this).parent().remove(); 
+            }); 
+                
+        }
+
+        $('.dept-empty-error').remove();
+        $('.dept-dupe-error').remove();
+
+        //if new value is same as original value, don't update
+        if (originalValue == newValue){
+            return false;
+        
+        } else if ($.inArray(newValue, deptArray) != -1) {
+            //refactor this after
+            $(this).val('');
+            $(this).parent().append('<p class="dept-dupe-error">You already have a department with this name.<p>');
+            return;
+        
+        //if original value was empty, means its a new value and we should push to array
+        } else if (originalValue === '' && newValue !== '') {
+                deptArray.push(newValue);
+        
+        //if original value was not empty, then it means we are editing and we must remove the original value and add the new value to array    
+        } else if (originalValue !== '' && newValue !== '') {
+            deptArray.push(newValue);
+            deptArray.splice( $.inArray(originalValue, deptArray), 1);
+        
+        } else if (originalValue !== '' && newValue === ''){
+            deptArray.splice( $.inArray(originalValue, deptArray), 1);
+
+        }
+
+        console.log(deptArray);
+
+        var dept = $(this).val();
+        
+        if (deptArray.indexOf(dept) != -1) {
+            var deptCheckbox = $('<div class="dept-checkbox">' + '<input type="checkbox" id="' + dept + '"name="[0][]">');
+                deptCheckbox.find('input').attr('value', dept).after('<label class="checkbox-label">' + dept + '</label></div>');
+            $('.depts-checkbox-container').append(deptCheckbox).show();
+
+            var checkboxArray = $('.dept-checkbox');
+
+            $.each(checkboxArray, function(i, val){
+                var parent = $(this).parents('.user-container');
+                var parentId = parent[0].id;
+                var thisCheckbox = $(this).find('input');
+
+                if(thisCheckbox.attr('name') === '[0][]'){
+                    thisCheckbox.attr('name', '[' + parentId + '][]');
+                }
+
+            });
+        }
+
+    });
+
+    //counter to attach id to .user-container
+    user_id = 0;
+    
+    //click handler to append newUser to DOM.
+    $('.new-user-btn').on('click', function(){
+
+    	var newUser = $('<div class="user-container clearfix"></div>').html($('#new-user').html());
+        
+        user_id++;
+        
+        newUser.attr('id', user_id);
+        newUser.find('#user_name').attr('name', 'name[' + user_id + ']');
+        newUser.find('#email').attr('name', 'email[' + user_id + ']');
+        newUser.find('#job_title').attr('name', 'job_title[' + user_id + ']');
+        newUser.find('#phone').attr('name', 'phone[' + user_id + ']');
+        newUser.find('#role').attr('name', 'role[' + user_id + ']');
+    	
+    	$('#user-section').append(newUser);
+        
+        newUser.find('input[type=checkbox]').attr('name', '[' + newUser.attr('id') + '][]');
+
+    	return false;
+    });
+
+    //remove user if close user button clicked
+    $(document).on('click', '.close-user-button', function(){
+            var user = $(this).closest('.user-container');
+            user.remove();
+    	   
     		return false;
-	}
+    });
 
-	//function that allows only numbers in inputs on which it is called. 
-	function numbersOnly(e){
-		//Only allow numbers
-		if(e.which !== 8 && e.which !== 0 && (e.which <48 || e.which > 57)){
-			return false;
-		}
-	}  
-
-	//function that checks for empty inputs and input errors, displays error message
-	function checkError(condition, error){
-		if(condition){
-			error.show()
-		} else {
-			error.hide()
-		}
-	}
-
-	//function that checks for errors in credit card inputs
-	function checkCC(condition, value){
-		
-		if(condition){
-			
-			$('label[for=' + value + ']').css('color', 'red');		
-		
-		} else {
-			
-			$('label[for=' + value + ']').css('color', 'black');
-		}
-	}
-
-	//-------------BASIC INFO---------------//
-
-	//focus on #name input on page load
-	$('#name').focus();
-
-	//hide other title input 
-	$('#other-title').hide();
-	
-	//bind a change event to the #title select list
-	$('#title').on("change", function(){
-		
-		//in the title list, if the option element has text of 'other' then show text input, else hide the input
-		if ($('option[value=other]').is(':selected')){
-			
-			//if option of 'other' selected, show the input 
-			$('#other-title').show();
-			
-		} else {
-			//else hide the 'other' input
-			$('#other-title').hide();
-		}
-	
-	});
-
-	//------------T-SHIRT DESIGN-----------------//
-
-	//hide color label and select menu
-	$('label[for=color], #color, #color-styled, [value=select-theme]').hide();
-
-	//change event handler on design select menu
-	$('#design').on("change", function(){
-		
-		//on change show all select options
-		$('label[for=color], #color, #color option, #color-styled').show();
-		
-		//if 'select theme' is selected, hide color select menu
-		if($('#design').children().first().is(':selected')){
-			$('label[for=color], #color, #color-styled').hide();
-		
-		//if js puns is selected, change the value of color menue to cornflower blue and slice and hide all non-js-puns colors. Also hide the 'select-theme' value.
-		} else if ($('#design option[value="js puns"]').is(':selected')){
-			$('#color').val('cornflowerblue');
-			$('#color').children().slice(4).hide();
-			$('[value=select-theme]').hide();
-
-		//if I <3 js selected, then hide all non-I<3js color and show the I <3 js colors
-		} else {
-			$('option[value=select-shirt]').hide();
-			$('#color').val('tomato');
-			$('#color').children().slice(0, 4).hide();
-		} 
-
-	});
-	
-	//---------------ACTIVITY SELECTORS-----------------//
-
-	//add total price element for activities
-	$('.activities label').last().after('<h2 class="total-price"></h2>');
-	$('.total-price').hide();
-	
-	//Click handler to calculate the price sum of activities activities selected
-	$('.activities input[type=checkbox]').on('click', function(){
-		
-		//initialize price
-		var totalPrice = 0;
-		
-		//set color of each activity label to black to reset diabled labels back to default state
-		$('.activities label').css('color', 'black');
-
-		//reset disabled attribute
-		$('.activities input[type=checkbox]').removeAttr('disabled');
-
-		//loop through all activity checkboxes, then check for conflicts and disable conflicting activities with the checkConflicts function
-		$('.activities input[type=checkbox]').each(function(){
-			
-			//check if activity checkbox is checked
-			if($(this).prop('checked')){
-
-				checkConflicts($(this));
-			}
-
-			//if activity checkbox is checked, and the activity is the "Main Conference", then add $200 to the totalPrice variable
-			if($(this).prop('checked') && $(this).attr('name') == 'all'){
-				totalPrice += 200;
-			
-			////if activity checkbox is checked, and the activity is not the "Main Conference", then add $100 to the totalPrice variable
-			} else if ($(this).prop('checked') && $(this).attr('name') !== 'all'){
-				totalPrice += 100;
-			}
-		});
-
-		//if total price is greater than 0, then display totalPrice, else hide it. 
-		if(totalPrice > 0){
-			displayPrice(totalPrice);
-		} else {
-			$('.total-price').hide();
-		}
-	});
-
-	//----------------PAYMENT OPTIONS--------------------//
-
-	//hide all payment information blocks except for credit card
-	$('.credit-card').nextAll('div').hide();
-	
-	//set the value of the #payment select menu to 'credit card'
-	$('#payment').val('credit card');
-
-	//event handle bound to #payment select menu
-	$('#payment').on('change', function(){
-		
-		//if paypal selected
-		if($('#payment option[value="paypal"]').is(':selected')){
-			//show paypal
-			$('.credit-card').next().show();
-			//hide credit card
-			$('.credit-card').hide();
-			//hide bitcoin
-			$('.credit-card').siblings().last().hide();
-		
-		//if bitcoin is selected
-		} else if ($('#payment option[value="bitcoin"]').is(':selected')){
-			//show bitcoin
-			$('.credit-card').siblings().last().show();
-			//hide credit card
-			$('.credit-card').hide();
-			//hide paypal
-			$('.credit-card').next().hide();
-		
-		//if credit card is selected
-		} else if ($('#payment option[value="credit card"]').is(':selected')){
-			//show credit card
-			$('.credit-card').show();
-			//hide bitcoin and paypal
-			$('.credit-card').nextAll('div').hide();
-		
-		//else hide credit card, bitcoin and paypal
-		} else {
-			$('#credit-card').hide();
-			$('#credit-card').nextAll().hide();
-		}
-	});
-
-//VALIDATION AND ERROR MESSAGES
-
-	//create element, structure and styles to apply if name input is empty
-	var nameEmpty = $('<p>Name field cannot be empty. Please enter your name.</p>');
-	nameEmpty.css('color', 'red');
-	$('label[for=name]').before(nameEmpty);
-	nameEmpty.hide();
-
-	//create element, structure and styles to apply if email input is empty
-	var emailEmpty = $('<p>Please enter a valid email</p>');
-	emailEmpty.css('color', 'red');
-	$('label[for=mail]').before(emailEmpty);
-	emailEmpty.hide();
-
-	//create element, structure and styles to apply if t-shirt design is not selected
-	var shirtEmpty = $('<p>You forget to pick a t-shirt.</p>');
-	shirtEmpty.css('color', 'red');
-	$('.shirt legend').after(shirtEmpty);
-	shirtEmpty.hide();
-
-	//create element, structure and styles to apply if activity is not selected
-	var activityEmpty = $('<p>You forget to pick an activity.</p>');
-	activityEmpty.css('color', 'red');
-	shirtEmpty.css('margin-top', '-20px');
-	$('.activities').after(activityEmpty);
-	activityEmpty.hide();
-
-	//create element, structure and logic to apply if activity is not selected
-	var paymentEmpty = $('<p>You must select a payment method.</p>');
-	paymentEmpty.css('color', 'red');
-	$('label[for=payment]').before(paymentEmpty);
-	paymentEmpty.hide();
-
-	//add keyup, keypress, and focus event handlers to the credit card inputs, and pass numbersOnly callback function to the event handlers. This checks the input and only allows numbers to be typed into the inputs. 
-	$('#cvv, #zip, #cc-num').keyup(numbersOnly).keypress(numbersOnly).focus(numbersOnly);
-	//max length of #cvv set to 4
-	$('#cvv').attr('maxlength', '4');
-	//max length of #zip set to 5
-	$('#zip').attr('maxlength', '5');
-	//max length of #cc-numb set to 16
-	$('#cc-num').attr('maxlength', '16');
-
-	//click handler on the submit button
-	$('button[type=submit]').on('click', function(){
-
-		//store object returned by validateCreditCard(), which is function from cardValidator.js jQuery plug-in. Validates that credit card number is valid
-		var ccResult = $('#cc-num').validateCreditCard();
-		
-		//create variable to store e-mail input for validation
-		var mailAdd = $('#mail').val();
-
-		//check if any of the input validators are invalid. If yes, then check which validation fails and show the invalid indicator, and return false so that form does not submit.  
-		if(!$('#name').val() || !validateEmail(mailAdd) || (!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected')) 
-			|| ($('#payment option[value="credit card"]').is(':selected') && (!ccResult.valid || ($('#zip').val() < 5) || $('#cvv').val().length < 3))){
-
-			//check if name imput value is empty, if empty show the invalid indicator nameEmpty
-			
-			checkError(!$('#name').val(), nameEmpty);
-
-			//check if email is invalid format, if invalid show the invalid indicator emailEmpty
-			
-			checkError(!validateEmail(mailAdd), emailEmpty);
-
-			//check t-shirt design not selected, if not selected show the shirtEmpty error indicator
-			
-			checkError(!$('#design option[value="js puns"]').is(':selected') && !$('#design option[value="heart js"]').is(':selected'), shirtEmpty)
-
-			//initialize an activity counter to check number of activities selected
-			var activityCounter = 0;
-			
-			//loop through all activities checkboxes, and if an item is checked, then increment the counter
-			$('.activities input[type=checkbox]').each(function(){
-				if($(this).prop('checked')){
-					activityCounter ++;
-				}
-			});
-			
-			//check value of activity counter, if activity counter is equal to 0, then show activityEmpty error message
-			
-			checkError(activityCounter === 0, activityEmpty);
-
-			//check if card valid. If credit card is selected and ccResult is not valid (ccResult.valid == false), then change color of cc-num label to red, 
-			
-			checkCC($('#payment option[value="credit card"]').is(':selected') && !ccResult.valid, 'cc-num');
-
-			//check if zip number less than 5. If credit card selected and zip is less than 5, change color of zip label to red.
-			checkCC($('#payment option[value="credit card"]').is(':selected') && $('#zip').val().length < 5, 'zip');
-
-			//check if cvv value length is less than 3. If cvv lenght less than 3, change cvv color to red. 
-			checkCC($('#payment option[value="credit card"]').is(':selected') && $('#cvv').val().length < 3, 'cvv');
-
-			return false;
-		}
-	});
 });
 
+
+    

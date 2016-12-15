@@ -14,8 +14,8 @@ button {
 
 body {
   font: 1em/1.5;
-  color: #184f68;
-	background: #accbd9;
+  color: white;
+  background: #262626;
 }
 
 header {
@@ -24,21 +24,31 @@ header {
 
 h1 {
 	font-size: 2.5em;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
 	margin: 0;
+	color: white;
+}
+
+h3 {
+	font-size: 1.3em;
+	font-weight: 300;
 }
 
 a {
   text-decoration: none;
 }
 
+p {
+	font-size: 1.2em;
+}
+
+
 /* ================================= 
   Form Element Styles
 ==================================== */
 
 form {
-	padding: .875em 1.875em 1.875em;
-	background: #85b5ca;
+	padding: .2em .5em .5em;
+	background: #4E5457;
 }
 
 fieldset,
@@ -57,135 +67,190 @@ button {
 	font-size: 1.25em;	
 }
 
-legend {
+legend.user-legend {
 	font-weight: 500;
-	padding-top: .5em;
-	border-top: 2px solid #679cb3;
+	padding-top: .9em;
+	border-top: 2px solid grey;
 	margin-bottom: 1.125em;
+	width: 95%;
+}
+
+
+legend {
+	width: 100%;
+	font-weight: 500;
+	margin-bottom: .8em;
+	font-size: 1.6em;
 }
 
 input[type="text"],
-input[type="email"],
-legend {
-	width: 100%;
+input[type="email"] {
+	width: 85%;
 }
 
 label {
-	color: #000;
+	color: #fff;
 	display: block;
 	margin-bottom: .5em;
-}
-
-label[for="exp-year"]{
-	margin-top: 20px;
+	font-size: 1.2em;
 }
 
 input,
 select {
-	margin-bottom: 1.125em;	
+	margin-bottom: 0em;	
 }
 
 input {
 	font-size: 1em;
 	font-weight: 500;
-	padding: .8em;
-	background: #c1deeb;
-	border: 2px solid #c1deeb;
+	padding: .5em;
+	background: #fff;
+	border: 2px solid #fff;
 	outline: none;
+	border-radius: 4px;
 }
 
 input:focus, .focus {
 	background: #fff;
-	border-color: #5e97b0;
+	border-color: #28df7a;
 	transition: border-color .4s, background-color .4s;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
+input[type="checkbox"] {
 	display: inline-block;
 }
 
 button {
 	color: #fff;
 	padding: .55em 1.25em;
-	background: #22627e;
-	margin: 1.25em 0 .5em;
+	background: #28df7a;
+	margin: 1.25em auto .5em;
 	cursor: pointer;
+	width: 90%;
+	display: block;
+	border-radius: 4px;
+	transition: background 0.3s ease;
 }
 
 button:hover {
-	background: #184c62;
+	background: #1db863;
 }
 
-#other-title {
-	margin-top: 35px;
-}
-
-.styled-select-large select {
-	background: transparent;
-   	width: 308px;
-   	padding: 5px;
-   	font-size: 16px;
-   	line-height: 1.2;
-   	border: 0;
-   	border-radius: 0;
-   	height: 34px;
-   	-webkit-appearance: none;
-   	-moz-appearance: none;
-}
-
-.styled-select-large {
-   width: 308px;
-   height: 34px;
-   overflow: hidden;
-   background: url('../images/arrow.png') no-repeat right #c1deeb;
-   border: none;
-   background-size: 30px 15px;
-   }
-
-.styled-select-small select {
-	background: transparent;
-   	width: 55px;
-   	padding: 5px;
-   	font-size: 16px;
-   	line-height: 1;
-   	border: 0;
-   	border-radius: 0;
-   	height: 34px;
-   	-webkit-appearance: none;
-   	-moz-appearance: none;
-}
-
-.styled-select-small {
-   width: 55px;
-   height: 34px;
-   overflow: hidden;
-   background: url('../images/arrow.png') no-repeat right #c1deeb;
-   border: none;
-   background-size: 30px 15px;
-   }
-
- .styled-select-medium select {
+.styled-select-medium select {
 	background: transparent;
    	width: 170px;
-   	padding: 5px;
+   	padding: 5px 10px 10px;
    	font-size: 16px;
-   	line-height: 1;
+   	line-height: 2em;
    	border: 0;
    	border-radius: 0;
-   	height: 34px;
+   	height: 47px;
    	-webkit-appearance: none;
    	-moz-appearance: none;
 }
 
 .styled-select-medium {
    width: 170px;
-   height: 34px;
+   height: 39px;
    overflow: hidden;
-   background: url('../images/arrow.png') no-repeat right #c1deeb;
+   background: url('../images/arrow.png') no-repeat right #fff;
    border: none;
    background-size: 30px 15px;
+   border-radius: 4px;
    }
+
+.phone {
+	max-width: 98%;
+}
+
+.dept-container {
+	margin: auto;
+}
+
+.dept-container label {
+	margin-top: 15px;
+}
+
+.close-button {
+	position: relative;
+	display: block;
+	cursor: pointer;
+	float: right;
+	height: 40px;
+	width: 30px;
+}
+
+.close-button span {
+	display: block;
+	height: 20px;
+	width: 20px;
+}
+
+.close-button:before,
+.close-button:after {
+
+	position: absolute;
+	content: '';
+	width: 20px;
+    height: 4px;
+    background-color: white;
+    display: block;
+    top: 15px;
+    left: 2px;
+
+}
+
+.close-button:before {
+	transform: rotate(45deg);
+}
+
+.close-button:after {
+    transform: rotate(-45deg);
+}
+
+.close-user-button{
+	margin-top: -25px;
+}
+
+.checkbox-label {
+	display: inline;
+}
+
+.dept-checkbox {
+	margin: 5px;
+}
+
+.dept-dupe-error,
+.dept-empty-error {
+	float: left;
+	color: red;
+}
+
+#user-section {
+	margin-left: 25px;
+}
+
+.submit-btn {
+	margin-top: 55px;
+	border-top: 2px solid grey;
+}
+
+button[type="submit"]{
+	margin: 15px auto 10px;
+}
+
+.depts-checkbox-container {
+	margin-top: 35px;
+}
+
+.dept-checkbox {
+	margin-top: 10px;
+}
+
+.checkbox-label {
+	margin-left: 5px;
+	font-size: 1.1em;
+}
 
 /* ================================= 
   Page Styles
@@ -193,21 +258,31 @@ button:hover {
 
 .container {
 	margin: auto;
-	max-width: 680px;
+	max-width: 1020px;
 }
 
-.shirt div {
-	float: left;
-	margin-right: .85em;
+.field-container {
+	width: 98%;
+	margin: 5px 0 20px;
 }
 
-.interests input {
-	margin-bottom: 0;
+.field-container-small {
+	width: 98%;
+	margin: 5px 0 20px;
 }
 
-.credit-card {
-	margin-top: 1.25em;
+.user-divider {
+	font-weight: 500;
+	margin: 30px 0 45px;
+	padding-top: .5em;
+	border-top: 2px solid grey;
 }
+
+.dept-section {
+	margin-left: 25px;
+}
+
+
 
 /* ================================= 
   Helper Classes
@@ -227,29 +302,40 @@ button:hover {
   Media Queries
 ==================================== */
 
-@media (min-width: 0) and (max-width: 679px) {
+@media (min-width: 680px)  {
 	header {
 		padding: 2em 0;
 	}
-	button {
-		width: 100%;
-	}
-}
 
-@media (min-width: 680px) {
-	header {
-		padding: 4.65em 0 2.5em;
+	button {
+		width: 300px;
+		margin-left: 30px;
 	}
-	.col {
+
+	.dept-container {
+		max-width: 550px;
+		margin: 5px;
+	}
+
+	.close-button {
+		width: 45px;
+	}
+	.close-button:before,
+	.close-button:after {
+		top: 17px;
+	}
+
+	.field-container {
+		width: 45%;
+		display:inline-block;
+	}
+
+	.field-container-small {
+		width: 33%;
 		float: left;
 	}
-	.col + .col {
-		margin-left: 2.5%;
-	}
-	.col-3 {
-		width: 23%;
-	}
-	.col-6 {
-		width: 49%;
+
+	.close-user-button {
+		margin-top: -40px;
 	}
 }
